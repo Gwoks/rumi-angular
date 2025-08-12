@@ -1,0 +1,243 @@
+<!-- Header Section -->
+<section class="bg-gradient-to-br from-sage-100 via-cream-50 to-terracotta-100 py-20">
+  <div class="container mx-auto px-4 text-center">
+    <div class="space-y-6">
+      <h1 class="text-5xl lg:text-6xl font-bubbly font-bold text-sage-800">
+        Program RUMI
+      </h1>
+      <p class="text-xl text-sage-600 font-clean max-w-3xl mx-auto leading-relaxed">
+        Jelajahi berbagai program pembelajaran Islami yang dirancang khusus untuk mengembangkan 
+        potensi anak dengan cara yang menyenangkan dan mudah dipahami.
+      </p>
+      
+      <!-- Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto mt-12">
+        <div class="text-center">
+          <div class="text-3xl font-bubbly font-bold text-terracotta-600">6+</div>
+          <div class="text-sm text-sage-600 font-clean">Program Unggulan</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bubbly font-bold text-terracotta-600">3-12</div>
+          <div class="text-sm text-sage-600 font-clean">Rentang Usia</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bubbly font-bold text-terracotta-600">100%</div>
+          <div class="text-sm text-sage-600 font-clean">Metode Islami</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Category Filter -->
+<section class="py-12 bg-white border-b border-cream-200">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-wrap justify-center gap-4">
+      <button
+        *ngFor="let category of categories"
+        (click)="selectCategory(category.id)"
+        [class]="selectedCategory === category.id ? 'bg-terracotta-500 text-white shadow-lg scale-105' : 'bg-cream-100 text-sage-700 hover:bg-cream-200'"
+        class="flex items-center space-x-2 px-6 py-3 rounded-full font-clean font-semibold transition-all duration-300 transform hover:scale-105">
+        <span class="text-lg">{{category.icon}}</span>
+        <span>{{category.name}}</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Programs Grid -->
+<section class="py-20 bg-gradient-to-br from-cream-50 to-sage-50">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div *ngFor="let program of filteredPrograms" 
+           class="bg-white rounded-3xl shadow-xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group">
+        
+        <!-- Program Header -->
+        <div class="{{program.color}} p-6 text-center relative overflow-hidden">
+          <!-- Decorative background -->
+          <div class="absolute top-0 right-0 w-20 h-20 bg-white opacity-10 rounded-full transform translate-x-6 -translate-y-6"></div>
+          <div class="absolute bottom-0 left-0 w-16 h-16 bg-white opacity-10 rounded-full transform -translate-x-4 translate-y-4"></div>
+          
+          <div class="relative z-10">
+            <div class="text-6xl mb-4 group-hover:animate-bounce">{{program.icon}}</div>
+            <h3 class="text-2xl font-bubbly font-bold text-sage-800 mb-2">{{program.title}}</h3>
+            <p class="text-sage-600 font-clean text-sm leading-relaxed">{{program.description}}</p>
+          </div>
+        </div>
+        
+        <!-- Program Info -->
+        <div class="p-6 space-y-6">
+          <!-- Quick Info -->
+          <div class="grid grid-cols-3 gap-4 text-center">
+            <div class="space-y-1">
+              <div class="text-xs text-sage-500 font-clean uppercase tracking-wide">Usia</div>
+              <div class="text-sm font-semibold text-sage-800">{{program.ageGroup}}</div>
+            </div>
+            <div class="space-y-1">
+              <div class="text-xs text-sage-500 font-clean uppercase tracking-wide">Durasi</div>
+              <div class="text-sm font-semibold text-sage-800">{{program.duration}}</div>
+            </div>
+            <div class="space-y-1">
+              <div class="text-xs text-sage-500 font-clean uppercase tracking-wide">Level</div>
+              <div class="text-sm font-semibold text-sage-800">{{program.difficulty}}</div>
+            </div>
+          </div>
+          
+          <!-- Content Overview -->
+          <div class="space-y-3">
+            <h4 class="text-lg font-bubbly font-bold text-sage-800">Materi Pembelajaran</h4>
+            <ul class="space-y-2">
+              <li *ngFor="let item of program.content.slice(0, 3)" 
+                  class="flex items-start space-x-2 text-sm text-sage-600 font-clean">
+                <span class="text-terracotta-500 text-xs mt-1">✓</span>
+                <span>{{item}}</span>
+              </li>
+              <li *ngIf="program.content.length > 3" 
+                  class="text-sm text-sage-500 font-clean italic">
+                dan {{program.content.length - 3}} materi lainnya...
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Features -->
+          <div class="space-y-3">
+            <h4 class="text-lg font-bubbly font-bold text-sage-800">Fitur Unggulan</h4>
+            <div class="flex flex-wrap gap-2">
+              <span *ngFor="let feature of program.features.slice(0, 2)"
+                    class="bg-cream-100 text-sage-700 text-xs font-clean px-3 py-1 rounded-full">
+                {{feature}}
+              </span>
+              <span *ngIf="program.features.length > 2"
+                    class="bg-sage-100 text-sage-600 text-xs font-clean px-3 py-1 rounded-full">
+                +{{program.features.length - 2}} lainnya
+              </span>
+            </div>
+          </div>
+          
+          <!-- Action Button -->
+          <div class="pt-4">
+            <button class="w-full bg-gradient-to-r from-terracotta-500 to-sage-500 hover:from-terracotta-600 hover:to-sage-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+              Mulai Program
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Empty State -->
+    <div *ngIf="filteredPrograms.length === 0" class="text-center py-16">
+      <div class="text-6xl mb-4">🔍</div>
+      <h3 class="text-2xl font-bubbly font-bold text-sage-800 mb-2">Program Tidak Ditemukan</h3>
+      <p class="text-sage-600 font-clean">Coba pilih kategori lain atau lihat semua program.</p>
+      <button (click)="selectCategory('all')" 
+              class="mt-4 btn-primary">
+        Lihat Semua Program
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Why Our Programs Section -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl lg:text-5xl font-bubbly font-bold text-sage-800 mb-4">
+        Mengapa Program RUMI Berbeda?
+      </h2>
+      <p class="text-lg text-sage-600 font-clean max-w-2xl mx-auto">
+        Program kami dirancang dengan pendekatan holistik yang menggabungkan teknologi modern 
+        dengan nilai-nilai Islam tradisional.
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Feature 1 -->
+      <div class="text-center space-y-4 group">
+        <div class="w-20 h-20 bg-gradient-to-br from-terracotta-400 to-terracotta-600 rounded-full mx-auto flex items-center justify-center text-3xl text-white group-hover:animate-bounce">
+          🎯
+        </div>
+        <h3 class="text-xl font-bubbly font-bold text-sage-800">Pembelajaran Terarah</h3>
+        <p class="text-sage-600 font-clean text-sm leading-relaxed">
+          Setiap program memiliki tujuan pembelajaran yang jelas dan terukur sesuai dengan perkembangan anak.
+        </p>
+      </div>
+      
+      <!-- Feature 2 -->
+      <div class="text-center space-y-4 group">
+        <div class="w-20 h-20 bg-gradient-to-br from-sage-400 to-sage-600 rounded-full mx-auto flex items-center justify-center text-3xl text-white group-hover:animate-bounce">
+          🎮
+        </div>
+        <h3 class="text-xl font-bubbly font-bold text-sage-800">Gamifikasi</h3>
+        <p class="text-sage-600 font-clean text-sm leading-relaxed">
+          Menggunakan elemen permainan untuk membuat pembelajaran menjadi lebih menyenangkan dan engaging.
+        </p>
+      </div>
+      
+      <!-- Feature 3 -->
+      <div class="text-center space-y-4 group">
+        <div class="w-20 h-20 bg-gradient-to-br from-cream-400 to-cream-600 rounded-full mx-auto flex items-center justify-center text-3xl text-white group-hover:animate-bounce">
+          📊
+        </div>
+        <h3 class="text-xl font-bubbly font-bold text-sage-800">Progress Tracking</h3>
+        <p class="text-sage-600 font-clean text-sm leading-relaxed">
+          Pantau perkembangan belajar anak dengan laporan progress yang detail dan mudah dipahami.
+        </p>
+      </div>
+      
+      <!-- Feature 4 -->
+      <div class="text-center space-y-4 group">
+        <div class="w-20 h-20 bg-gradient-to-br from-terracotta-400 to-sage-400 rounded-full mx-auto flex items-center justify-center text-3xl text-white group-hover:animate-bounce">
+          👨‍👩‍👧‍👦
+        </div>
+        <h3 class="text-xl font-bubbly font-bold text-sage-800">Family Oriented</h3>
+        <p class="text-sage-600 font-clean text-sm leading-relaxed">
+          Melibatkan seluruh keluarga dalam proses pembelajaran untuk hasil yang optimal.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-br from-sage-600 to-terracotta-600 relative overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="absolute top-10 left-10 w-32 h-32 bg-white opacity-5 rounded-full animate-float"></div>
+    <div class="absolute bottom-20 right-20 w-24 h-24 bg-white opacity-5 rounded-full animate-float" style="animation-delay: 2s;"></div>
+    <div class="absolute top-1/2 right-10 w-20 h-20 bg-white opacity-5 rounded-full animate-float" style="animation-delay: 4s;"></div>
+  </div>
+  
+  <div class="container mx-auto px-4 text-center relative z-10">
+    <div class="space-y-8">
+      <h2 class="text-4xl lg:text-5xl font-bubbly font-bold text-white">
+        Siap Memulai Perjalanan Belajar?
+      </h2>
+      <p class="text-xl text-cream-100 font-clean max-w-2xl mx-auto">
+        Bergabunglah dengan ribuan keluarga yang telah merasakan manfaat program RUMI. 
+        Mulai hari ini dan lihat perkembangan luar biasa pada anak Anda.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a routerLink="/login" 
+           class="bg-white text-terracotta-600 hover:bg-cream-100 font-semibold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
+          Mulai Sekarang - Gratis
+        </a>
+        <a routerLink="/contact" 
+           class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-terracotta-600 font-semibold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105">
+          Konsultasi Gratis
+        </a>
+      </div>
+      
+      <!-- Trust Indicators -->
+      <div class="pt-8 border-t border-white/20">
+        <p class="text-cream-200 font-clean text-sm mb-4">Dipercaya oleh 1000+ keluarga di Indonesia</p>
+        <div class="flex justify-center items-center space-x-8 opacity-70">
+          <div class="flex items-center space-x-1">
+            <span class="text-yellow-300 text-lg">⭐⭐⭐⭐⭐</span>
+            <span class="text-white text-sm font-clean">4.9/5 rating</span>
+          </div>
+          <div class="text-white text-sm font-clean">100% Halal & Aman</div>
+          <div class="text-white text-sm font-clean">Bersertifikat</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

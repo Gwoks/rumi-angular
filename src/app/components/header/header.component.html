@@ -1,0 +1,138 @@
+<header class="bg-cream-100 shadow-lg sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center space-x-3 cursor-pointer" routerLink="/home">
+        <!-- RUMI Logo -->
+        <div class="w-12 h-12">
+                      <img src="assets/images/rumi-logo.svg" alt="RUMI Logo" class="w-full h-full object-contain">
+        </div>
+        <div>
+          <h1 class="text-2xl font-clean font-bold text-sage-700">RUMI</h1>
+          <p class="text-xs text-terracotta-500 font-clean">rumah main islami</p>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-8">
+        <a routerLink="/home" 
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Beranda
+        </a>
+        <a routerLink="/programs" 
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Program
+        </a>
+        <a routerLink="/activities" 
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Aktivitas
+        </a>
+        <a routerLink="/about" 
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Tentang Kami
+        </a>
+        <a routerLink="/contact" 
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Kontak
+        </a>
+      </nav>
+
+      <!-- User Actions -->
+      <div class="hidden md:flex items-center space-x-4">
+        <div *ngIf="currentUser; else loginButton" class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-sage-500 rounded-full flex items-center justify-center">
+            <span class="text-white text-sm font-semibold">{{currentUser.name.charAt(0).toUpperCase()}}</span>
+          </div>
+          <span class="text-sage-700 font-clean">{{currentUser.name}}</span>
+          <button (click)="logout()" 
+                  class="text-sage-600 hover:text-terracotta-500 transition-colors duration-300">
+            Keluar
+          </button>
+        </div>
+        <ng-template #loginButton>
+          <a routerLink="/login" class="btn-primary">
+            Masuk
+          </a>
+        </ng-template>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button (click)="toggleMenu()" 
+              class="md:hidden w-8 h-8 flex flex-col justify-center items-center space-y-1">
+        <span class="w-6 h-0.5 bg-sage-700 transition-all duration-300"
+              [class.rotate-45]="isMenuOpen"
+              [class.translate-y-2]="isMenuOpen"></span>
+        <span class="w-6 h-0.5 bg-sage-700 transition-all duration-300"
+              [class.opacity-0]="isMenuOpen"></span>
+        <span class="w-6 h-0.5 bg-sage-700 transition-all duration-300"
+              [class.-rotate-45]="isMenuOpen"
+              [class.-translate-y-2]="isMenuOpen"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden overflow-hidden transition-all duration-300"
+         [class.max-h-0]="!isMenuOpen"
+         [class.max-h-96]="isMenuOpen">
+      <nav class="pt-4 pb-2 space-y-3">
+        <a routerLink="/home" 
+           (click)="toggleMenu()"
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="block text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Beranda
+        </a>
+        <a routerLink="/programs" 
+           (click)="toggleMenu()"
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="block text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Program
+        </a>
+        <a routerLink="/activities" 
+           (click)="toggleMenu()"
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="block text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Aktivitas
+        </a>
+        <a routerLink="/about" 
+           (click)="toggleMenu()"
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="block text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Tentang Kami
+        </a>
+        <a routerLink="/contact" 
+           (click)="toggleMenu()"
+           routerLinkActive="text-terracotta-600 font-semibold"
+           class="block text-sage-700 hover:text-terracotta-500 transition-colors duration-300 font-clean">
+          Kontak
+        </a>
+        
+        <div class="pt-3 border-t border-cream-200">
+          <div *ngIf="currentUser; else mobileLoginButton" class="space-y-2">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-sage-500 rounded-full flex items-center justify-center">
+                <span class="text-white text-sm font-semibold">{{currentUser.name.charAt(0).toUpperCase()}}</span>
+              </div>
+              <span class="text-sage-700 font-clean">{{currentUser.name}}</span>
+            </div>
+            <button (click)="logout(); toggleMenu()" 
+                    class="text-sage-600 hover:text-terracotta-500 transition-colors duration-300">
+              Keluar
+            </button>
+          </div>
+          <ng-template #mobileLoginButton>
+            <a routerLink="/login" 
+               (click)="toggleMenu()"
+               class="btn-primary w-full text-center">
+              Masuk
+            </a>
+          </ng-template>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>

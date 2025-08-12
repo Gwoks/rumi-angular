@@ -1,0 +1,263 @@
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-br from-cream-100 via-sage-50 to-terracotta-50 overflow-hidden">
+  <!-- Decorative Background Elements -->
+  <div class="absolute top-20 left-10 w-32 h-32 bg-sage-200 rounded-full opacity-30 animate-float"></div>
+  <div class="absolute top-40 right-20 w-24 h-24 bg-terracotta-200 rounded-full opacity-40 animate-float" style="animation-delay: 2s;"></div>
+  <div class="absolute bottom-20 left-1/4 w-20 h-20 bg-cream-300 rounded-full opacity-50 animate-float" style="animation-delay: 4s;"></div>
+  
+  <div class="container mx-auto px-4 py-20 lg:py-32">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <!-- Hero Content -->
+      <div class="text-center lg:text-left space-y-8">
+        <div class="space-y-4">
+          <h1 class="text-5xl lg:text-7xl font-clean font-bold text-sage-700 leading-tight">
+            Selamat Datang di
+            <span class="text-sage-700">RUMI</span>
+          </h1>
+          <p class="text-xl lg:text-2xl text-terracotta-500 font-clean">
+            rumah main islami
+          </p>
+          <p class="text-lg text-sage-700 font-clean leading-relaxed max-w-xl">
+            Tempat bermain dan belajar yang menyenangkan untuk anak-anak dengan nilai-nilai Islami. 
+            Mari bersama-sama menumbuhkan generasi yang cerdas dan berakhlak mulia.
+          </p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <a routerLink="/programs" class="btn-primary text-center">
+            Mulai Belajar
+          </a>
+          <a routerLink="/about" class="btn-secondary text-center">
+            Tentang Kami
+          </a>
+        </div>
+        
+        <!-- Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
+          <div *ngFor="let stat of stats" class="text-center">
+            <div class="text-2xl lg:text-3xl font-bubbly font-bold text-terracotta-600">{{stat.number}}</div>
+            <div class="text-sm text-sage-600 font-clean">{{stat.label}}</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Hero Image/Illustration -->
+      <div class="flex justify-center lg:justify-end">
+        <div class="relative">
+          <!-- Main RUMI Logo illustration -->
+          <div class="w-80 h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-cream-200 to-cream-100 rounded-blob shadow-2xl flex items-center justify-center transform rotate-6 hover:rotate-3 transition-transform duration-500 relative overflow-hidden">
+            <!-- Large RUMI Logo -->
+            <div class="w-48 h-48">
+              <img src="assets/images/rumi-logo.svg" alt="RUMI Logo" class="w-full h-full object-contain drop-shadow-xl">
+            </div>
+            <div class="absolute bottom-8 text-center">
+              <div class="font-clean text-3xl font-bold text-sage-700">RUMI</div>
+              <div class="font-clean text-sm text-terracotta-600">rumah main islami</div>
+            </div>
+          </div>
+          
+          <!-- Floating elements -->
+          <div class="absolute -top-6 -left-6 w-16 h-16 bg-terracotta-400 rounded-full flex items-center justify-center text-2xl animate-bounce-slow">
+            📖
+          </div>
+          <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-sage-400 rounded-full flex items-center justify-center text-3xl animate-bounce-slow" style="animation-delay: 1s;">
+            ⭐
+          </div>
+          <div class="absolute top-1/2 -right-8 w-12 h-12 bg-cream-400 rounded-full flex items-center justify-center text-xl animate-bounce-slow" style="animation-delay: 2s;">
+            🕌
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Wavy Bottom -->
+  <div class="absolute bottom-0 left-0 w-full">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-16 md:h-24">
+      <path d="M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z" 
+            fill="white"/>
+    </svg>
+  </div>
+</section>
+
+<!-- Featured Programs Section -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl lg:text-5xl font-bubbly font-bold text-sage-800 mb-4">
+        Program Unggulan
+      </h2>
+      <p class="text-lg text-sage-600 font-clean max-w-2xl mx-auto">
+        Berbagai program menarik yang dirancang khusus untuk mengembangkan 
+        potensi anak dengan pendekatan Islami yang menyenangkan.
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div *ngFor="let program of programs" 
+           class="card-organic {{program.color}} group cursor-pointer"
+           routerLink="/programs">
+        <div class="text-center space-y-4">
+          <div class="text-5xl mb-4 group-hover:animate-bounce">{{program.icon}}</div>
+          <h3 class="text-xl font-bubbly font-bold text-sage-800">{{program.title}}</h3>
+          <p class="text-sage-600 font-clean text-sm">{{program.description}}</p>
+          <div class="mt-6">
+            <span class="inline-flex items-center text-terracotta-600 font-semibold text-sm">
+              Pelajari Lebih Lanjut
+              <svg class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="py-20 bg-gradient-to-br from-sage-50 to-cream-100 section-wavy">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div class="space-y-8">
+        <div>
+          <h2 class="text-4xl lg:text-5xl font-bubbly font-bold text-sage-800 mb-6">
+            Mengapa Memilih RUMI?
+          </h2>
+          <p class="text-lg text-sage-600 font-clean leading-relaxed">
+            RUMI menghadirkan pendekatan pembelajaran Islam yang inovatif, 
+            menyenangkan, dan sesuai dengan perkembangan anak modern.
+          </p>
+        </div>
+        
+        <div class="space-y-6">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-terracotta-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bubbly font-bold text-sage-800">Metode Interaktif</h3>
+              <p class="text-sage-600 font-clean">Pembelajaran melalui permainan dan aktivitas yang menyenangkan</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-sage-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bubbly font-bold text-sage-800">Kurikulum Terintegrasi</h3>
+              <p class="text-sage-600 font-clean">Menggabungkan nilai-nilai Islam dengan perkembangan kognitif anak</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-cream-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bubbly font-bold text-sage-800">Lingkungan Aman</h3>
+              <p class="text-sage-600 font-clean">Menciptakan ruang belajar yang aman dan nyaman untuk anak-anak</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Illustration -->
+      <div class="flex justify-center">
+        <div class="relative">
+          <div class="w-72 h-72 lg:w-80 lg:h-80 bg-gradient-to-br from-terracotta-200 to-sage-200 rounded-organic shadow-xl flex items-center justify-center">
+            <div class="text-center">
+              <div class="text-8xl mb-4">🌟</div>
+              <div class="font-bubbly text-xl text-sage-800">Belajar dengan Cinta</div>
+            </div>
+          </div>
+          
+          <!-- Floating icons -->
+          <div class="absolute -top-4 left-8 w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center text-2xl animate-float">
+            📱
+          </div>
+          <div class="absolute -right-6 top-1/3 w-14 h-14 bg-white rounded-full shadow-lg flex items-center justify-center text-xl animate-float" style="animation-delay: 1.5s;">
+            🎯
+          </div>
+          <div class="absolute -bottom-2 left-1/4 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-lg animate-float" style="animation-delay: 3s;">
+            💝
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl lg:text-5xl font-bubbly font-bold text-sage-800 mb-4">
+        Kata Mereka
+      </h2>
+      <p class="text-lg text-sage-600 font-clean max-w-2xl mx-auto">
+        Dengarkan pengalaman keluarga-keluarga yang telah merasakan manfaat program RUMI
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let testimonial of testimonials" 
+           class="bg-gradient-to-br from-cream-50 to-sage-50 rounded-3xl p-8 shadow-lg transform transition-all duration-300 hover:scale-105">
+        <div class="space-y-4">
+          <div class="flex items-center space-x-1">
+            <span *ngFor="let star of [1,2,3,4,5]" class="text-2xl text-terracotta-500">⭐</span>
+          </div>
+          <p class="text-sage-700 font-clean italic leading-relaxed">
+            "{{testimonial.text}}"
+          </p>
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-sage-300 rounded-full flex items-center justify-center">
+              <span class="text-xl">👨‍👩‍👧‍👦</span>
+            </div>
+            <div>
+              <div class="font-bubbly font-bold text-sage-800">{{testimonial.name}}</div>
+              <div class="text-sm text-sage-600 font-clean">Orang Tua RUMI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-terracotta-500 to-sage-600 relative overflow-hidden">
+  <div class="absolute inset-0 bg-black opacity-10"></div>
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="text-center space-y-8">
+      <h2 class="text-4xl lg:text-5xl font-bubbly font-bold text-white mb-4">
+        Bergabunglah dengan RUMI Hari Ini!
+      </h2>
+      <p class="text-xl text-cream-100 font-clean max-w-2xl mx-auto">
+        Mulai perjalanan belajar yang menyenangkan untuk anak Anda bersama RUMI. 
+        Daftar sekarang dan dapatkan akses ke semua program unggulan kami.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a routerLink="/login" 
+           class="bg-white text-terracotta-600 hover:bg-cream-100 font-semibold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
+          Daftar Sekarang
+        </a>
+        <a routerLink="/contact" 
+           class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-terracotta-600 font-semibold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105">
+          Hubungi Kami
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Decorative elements -->
+  <div class="absolute top-10 right-10 w-32 h-32 border-4 border-white opacity-20 rounded-full animate-pulse"></div>
+  <div class="absolute bottom-10 left-10 w-24 h-24 border-4 border-white opacity-20 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+</section>

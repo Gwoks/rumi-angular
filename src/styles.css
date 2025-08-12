@@ -1,0 +1,42 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  .font-bubbly {
+    font-family: 'Comic Neue', cursive;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-terracotta-500 hover:bg-terracotta-600 text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg;
+  }
+  
+  .btn-secondary {
+    @apply bg-sage-500 hover:bg-sage-600 text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg;
+  }
+  
+  .card-organic {
+    @apply bg-white rounded-3xl shadow-xl p-6 transform transition-all duration-300 hover:scale-105;
+  }
+  
+  .section-wavy {
+    @apply relative overflow-hidden;
+  }
+  
+  .section-wavy::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-24 bg-wavy opacity-30;
+  }
+}
