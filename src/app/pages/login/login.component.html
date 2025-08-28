@@ -1,0 +1,98 @@
+<div class="min-h-screen bg-gradient-to-br from-cream-100 via-sage-50 to-terracotta-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Logo and Title -->
+    <div class="text-center">
+      <div class="flex justify-center mb-4">
+        <!-- Large RUMI Logo -->
+        <div class="w-20 h-20 animate-bounce-slow">
+          <img src="assets/images/rumi-logo.svg" alt="RUMI Logo" class="w-full h-full object-contain drop-shadow-lg">
+        </div>
+      </div>
+      <h2 class="text-4xl font-clean font-bold text-sage-700 mb-2">RUMI</h2>
+      <p class="text-lg text-terracotta-500 font-clean">rumah main islami</p>
+      <p class="mt-4 text-sm text-sage-500">
+        Masuk ke akun Anda
+      </p>
+    </div>
+
+    <!-- Login Form Card -->
+    <div class="bg-white rounded-3xl shadow-2xl p-8 transform transition-all duration-300 hover:scale-105 relative z-10">
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Login Form -->
+      <form (ngSubmit)="onSubmit()" class="space-y-4">
+        <div>
+          <label for="email" class="block text-sm font-medium text-sage-700 mb-1">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            [(ngModel)]="loginForm.email"
+            class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-terracotta-500 focus:border-transparent transition-all duration-300"
+            placeholder="nama@email.com">
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-sage-700 mb-1">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            [(ngModel)]="loginForm.password"
+            class="w-full px-4 py-3 border border-sage-200 rounded-xl focus:ring-2 focus:ring-terracotta-500 focus:border-transparent transition-all duration-300"
+            placeholder="••••••••">
+        </div>
+        
+        <!-- Forgot Password Link -->
+        <div class="flex items-center justify-end">
+          <a href="#" class="text-sm text-terracotta-500 hover:text-terracotta-600 transition-colors">
+            Lupa password?
+          </a>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="w-full bg-terracotta-500 hover:bg-terracotta-600 disabled:bg-sage-300 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg disabled:cursor-not-allowed disabled:transform-none">
+          <span *ngIf="!isLoading">Masuk</span>
+          <span *ngIf="isLoading" class="flex items-center justify-center">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Memproses...
+          </span>
+        </button>
+      </form>
+
+      <!-- Register Link -->
+      <div class="mt-6 text-center">
+        <p class="text-sm text-sage-500">
+          Belum punya akun? 
+          <a routerLink="/register" class="text-terracotta-500 hover:text-terracotta-600 font-semibold transition-colors">
+            Daftar di sini
+          </a>
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="mt-6 text-center">
+        <p class="text-sm text-sage-500">
+          Dengan masuk, Anda menyetujui 
+          <a href="#" class="text-terracotta-500 hover:text-terracotta-600">Syarat & Ketentuan</a>
+          dan 
+          <a href="#" class="text-terracotta-500 hover:text-terracotta-600">Kebijakan Privasi</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="fixed top-10 left-10 w-20 h-20 bg-sage-200 rounded-full opacity-50 animate-float -z-10"></div>
+    <div class="fixed bottom-20 right-20 w-16 h-16 bg-terracotta-200 rounded-full opacity-50 animate-float -z-10" style="animation-delay: 2s;"></div>
+    <div class="fixed top-1/2 right-10 w-12 h-12 bg-cream-300 rounded-full opacity-50 animate-float -z-10" style="animation-delay: 4s;"></div>
+  </div>
+</div>

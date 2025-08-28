@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { ApiService } from './api.service';
 
 export interface User {
   id: string;
@@ -16,20 +17,19 @@ export interface LoginCredentials {
 }
 
 export interface SignupCredentials extends LoginCredentials {
-  name: string;
-  confirmPassword: string;
+  phone: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000'; // Backend API URL
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
     private http: HttpClient,
+    private apiService: ApiService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Check if user is already logged in on service initialization
@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   login(credentials: LoginCredentials): Observable<{ user: User; token: string }> {
-    return this.http.post<{ user: User; token: string }>(`${this.apiUrl}/login`, credentials)
+    return this.http.post<{ user: User; token: string }>(this.apiService.auth.login, credentials)
       .pipe(
         tap(response => {
           if (isPlatformBrowser(this.platformId)) {
@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   signup(credentials: SignupCredentials): Observable<{ user: User; token: string }> {
-    return this.http.post<{ user: User; token: string }>(`${this.apiUrl}/signup`, credentials)
+    return this.http.post<{ user: User; token: string }>(this.apiService.auth.signup, credentials)
       .pipe(
         tap(response => {
           if (isPlatformBrowser(this.platformId)) {

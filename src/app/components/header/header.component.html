@@ -5,7 +5,7 @@
       <div class="flex items-center space-x-3 cursor-pointer" routerLink="/home">
         <!-- RUMI Logo -->
         <div class="w-12 h-12">
-                      <img src="assets/images/rumi-logo.svg" alt="RUMI Logo" class="w-full h-full object-contain">
+          <img src="assets/images/rumi-logo.svg" alt="RUMI Logo" class="w-full h-full object-contain">
         </div>
         <div>
           <h1 class="text-2xl font-clean font-bold text-sage-700">RUMI</h1>
@@ -55,9 +55,14 @@
           </button>
         </div>
         <ng-template #loginButton>
-          <a routerLink="/login" class="btn-primary">
-            Masuk
-          </a>
+          <div class="flex space-x-3">
+            <a routerLink="/login" class="btn-secondary">
+              Masuk
+            </a>
+            <a routerLink="/register" class="btn-primary">
+              Daftar
+            </a>
+          </div>
         </ng-template>
       </div>
 
@@ -125,11 +130,18 @@
             </button>
           </div>
           <ng-template #mobileLoginButton>
-            <a routerLink="/login" 
-               (click)="toggleMenu()"
-               class="btn-primary w-full text-center">
-              Masuk
-            </a>
+            <div class="space-y-2">
+              <a routerLink="/login" 
+                 (click)="toggleMenu()"
+                 class="btn-secondary w-full text-center">
+                Masuk
+              </a>
+              <a routerLink="/register" 
+                 (click)="toggleMenu()"
+                 class="btn-primary w-full text-center">
+                Daftar
+              </a>
+            </div>
           </ng-template>
         </div>
       </nav>
