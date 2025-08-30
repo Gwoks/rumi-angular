@@ -37,11 +37,32 @@ export class LoginComponent {
     this.authService.login(this.loginForm).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.router.navigate(['/home']);
+        console.log('Login successful:', response);
+        // Redirect to dashboard on successful login
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Login gagal. Silakan coba lagi.';
+        console.error('Login error:', error);
+        
+        // Handle different types of errors
+        if (error.error?.error?.message) {
+          this.errorMessage = error.error.error.message;
+        } else if (error.error?.message) {
+          this.errorMessage = error.error.message;
+        } else if (error.message) {
+          this.errorMessage = error.message;
+        } else {
+          this.errorMessage = 'Login failed. Please try again.';
+        }
+
+        // If token is invalid or session expired, redirect to home
+        if (error.status === 401 || error.status === 403) {
+          this.authService.clearInvalidSession();
+          setTimeout(() => {
+            this.router.navigate(['/home']);
+          }, 2000);
+        }
       }
     });
   }

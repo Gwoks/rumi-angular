@@ -17,6 +17,7 @@ export class RegisterComponent {
 
   signupForm: SignupCredentials = {
     email: '',
+    name: '',
     password: '',
     phone: ''
   };
@@ -50,11 +51,31 @@ export class RegisterComponent {
     this.authService.signup(this.signupForm).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.router.navigate(['/home']);
+        console.log('Signup successful:', response);
+        // Redirect to dashboard on successful registration
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Registrasi gagal. Silakan coba lagi.';
+        console.error('Signup error:', error);
+        
+        // Handle different types of errors
+        if (error.error?.error?.message) {
+          this.errorMessage = error.error.error.message;
+        } else if (error.error?.message) {
+          this.errorMessage = error.error.message;
+        } else if (error.message) {
+          this.errorMessage = error.message;
+        } else {
+          this.errorMessage = 'Registration failed. Please try again.';
+        }
+
+        // If there's a server error, redirect to home after showing error
+        if (error.status === 500) {
+          setTimeout(() => {
+            this.router.navigate(['/home']);
+          }, 3000);
+        }
       }
     });
   }

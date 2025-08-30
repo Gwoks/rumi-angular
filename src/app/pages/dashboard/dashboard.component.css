@@ -1,0 +1,43 @@
+.dashboard-container {
+  height: 100vh;
+}
+
+.sidebar {
+  width: 256px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-closed {
+  width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 50;
+    transform: translateX(0);
+  }
+  
+  .sidebar-closed {
+    transform: translateX(-100%);
+    width: 256px;
+  }
+}
+
+.sidebar button:hover {
+  transform: translateX(2px);
+}
+
+.sidebar button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.2s ease-in-out;
+}

@@ -1,0 +1,200 @@
+.profile-edit-container {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tab transitions */
+.border-b-2 {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Form animations */
+.space-y-6 > div {
+  animation: slideIn 0.4s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Input focus effects */
+input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  transform: translateY(-1px);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Error state */
+input.border-red-300 {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Success/Error message animations */
+.bg-green-50, .bg-red-50 {
+  animation: messageSlideIn 0.4s ease-in-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Profile avatar */
+.w-20.h-20 {
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+}
+
+.w-20.h-20:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Button hover effects */
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Loading spinner */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Tab indicator animation */
+.border-blue-500 {
+  position: relative;
+}
+
+.border-blue-500::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3B82F6, #1D4ED8);
+  animation: tabIndicator 0.3s ease-in-out;
+}
+
+@keyframes tabIndicator {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Card hover effects */
+.bg-white.rounded-xl {
+  transition: all 0.3s ease-in-out;
+}
+
+.bg-white.rounded-xl:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Form field containers */
+.space-y-6 > div {
+  position: relative;
+  overflow: hidden;
+}
+
+.space-y-6 > div::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+  transition: left 0.5s ease-in-out;
+}
+
+.space-y-6 > div:focus-within::before {
+  left: 100%;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .profile-edit-container {
+    padding: 1rem;
+  }
+  
+  .grid.grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .flex.items-center.space-x-4 {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    space-x: 0;
+    gap: 1rem;
+  }
+}
+
+/* Password strength indicator (could be added later) */
+.password-strength {
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.password-strength.weak {
+  background: linear-gradient(to right, #EF4444 30%, #E5E7EB 30%);
+}
+
+.password-strength.medium {
+  background: linear-gradient(to right, #F59E0B 60%, #E5E7EB 60%);
+}
+
+.password-strength.strong {
+  background: #10B981;
+}

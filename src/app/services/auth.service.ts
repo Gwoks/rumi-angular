@@ -9,6 +9,11 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  phone: string;
+  role: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface LoginCredentials {
@@ -18,6 +23,16 @@ export interface LoginCredentials {
 
 export interface SignupCredentials extends LoginCredentials {
   phone: string;
+  name: string;
+}
+
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+    token: string;
+  };
 }
 
 @Injectable({
@@ -41,28 +56,36 @@ export class AuthService {
     }
   }
 
-  login(credentials: LoginCredentials): Observable<{ user: User; token: string }> {
-    return this.http.post<{ user: User; token: string }>(this.apiService.auth.login, credentials)
+  login(credentials: LoginCredentials): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(this.apiService.auth.login, credentials)
       .pipe(
         tap(response => {
-          if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('currentUser', JSON.stringify(response.user));
-            localStorage.setItem('token', response.token);
+          if (response.success && response.data) {
+            if (isPlatformBrowser(this.platformId)) {
+              localStorage.setItem('currentUser', JSON.stringify(response.data.user));
+              localStorage.setItem('token', response.data.token);
+            }
+            this.currentUserSubject.next(response.data.user);
+          } else {
+            throw new Error(response.message || 'Login failed');
           }
-          this.currentUserSubject.next(response.user);
         })
       );
   }
 
-  signup(credentials: SignupCredentials): Observable<{ user: User; token: string }> {
-    return this.http.post<{ user: User; token: string }>(this.apiService.auth.signup, credentials)
+  signup(credentials: SignupCredentials): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(this.apiService.auth.signup, credentials)
       .pipe(
         tap(response => {
-          if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('currentUser', JSON.stringify(response.user));
-            localStorage.setItem('token', response.token);
+          if (response.success && response.data) {
+            if (isPlatformBrowser(this.platformId)) {
+              localStorage.setItem('currentUser', JSON.stringify(response.data.user));
+              localStorage.setItem('token', response.data.token);
+            }
+            this.currentUserSubject.next(response.data.user);
+          } else {
+            throw new Error(response.message || 'Signup failed');
           }
-          this.currentUserSubject.next(response.user);
         })
       );
   }
@@ -88,5 +111,63 @@ export class AuthService {
       return localStorage.getItem('token');
     }
     return null;
+  }
+
+  updateCurrentUser(user: User): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+    this.currentUserSubject.next(user);
+  }
+
+  // Check if token is valid
+  isTokenValid(): boolean {
+    const token = this.getToken();
+    const user = this.currentUserValue;
+    
+    if (!token || !user) {
+      return false;
+    }
+
+    try {
+      // Basic JWT token validation - check if token is not expired
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp * 1000; // Convert to milliseconds
+      return Date.now() < exp;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Clear invalid session
+  clearInvalidSession(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('token');
+    }
+    this.currentUserSubject.next(null);
+  }
+
+  // Check and validate stored session on app init
+  checkStoredSession(): boolean {
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('currentUser');
+      
+      if (token && storedUser) {
+        if (this.isTokenValid()) {
+          try {
+            const user = JSON.parse(storedUser);
+            this.currentUserSubject.next(user);
+            return true;
+          } catch (e) {
+            this.clearInvalidSession();
+          }
+        } else {
+          this.clearInvalidSession();
+        }
+      }
+    }
+    return false;
   }
 }
