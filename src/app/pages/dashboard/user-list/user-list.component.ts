@@ -1,27 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService, User } from '../../../services/auth.service';
-import { ApiService } from '../../../services/api.service';
-
-interface UserListResponse {
-  success: boolean;
-  message: string;
-  data: User[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
-
-interface UserResponse {
-  success: boolean;
-  message: string;
-  data: User;
-}
+import { UserService, CreateUserRequest, UpdateUserRequest } from '../../../services/user.service';
 
 @Component({
   selector: 'app-user-list',
@@ -55,9 +36,8 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private authService: AuthService,
-    private apiService: ApiService
+    private userService: UserService
   ) {
     this.createForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -79,25 +59,16 @@ export class UserListComponent implements OnInit {
     this.loadUsers();
   }
 
-  getAuthHeaders() {
-    const token = this.authService.getToken();
-    return {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      })
-    };
-  }
+
 
   loadUsers() {
     this.loading = true;
-    const url = `${this.apiService.apiUrl}/users?page=${this.currentPage}&limit=${this.limit}`;
     
-    this.http.get<UserListResponse>(url, this.getAuthHeaders()).subscribe({
+    this.userService.getAllUsers(this.currentPage, this.limit).subscribe({
       next: (response) => {
         this.users = response.data;
         this.currentPage = response.pagination.page;
-        this.totalPages = response.pagination.totalPages;
+        this.totalPages = response.pagination.total_pages;
         this.total = response.pagination.total;
         this.loading = false;
       },
@@ -123,10 +94,9 @@ export class UserListComponent implements OnInit {
   createUser() {
     if (this.createForm.invalid) return;
 
-    const formData = this.createForm.value;
-    const url = `${this.apiService.apiUrl}/users`;
+    const formData: CreateUserRequest = this.createForm.value;
     
-    this.http.post<UserResponse>(url, formData, this.getAuthHeaders()).subscribe({
+    this.userService.createUser(formData).subscribe({
       next: (response) => {
         console.log('User created:', response);
         this.closeCreateModal();
@@ -159,10 +129,9 @@ export class UserListComponent implements OnInit {
   updateUser() {
     if (this.editForm.invalid || !this.selectedUser) return;
 
-    const formData = this.editForm.value;
-    const url = `${this.apiService.apiUrl}/users/${this.selectedUser.id}`;
+    const formData: UpdateUserRequest = this.editForm.value;
     
-    this.http.put<UserResponse>(url, formData, this.getAuthHeaders()).subscribe({
+    this.userService.updateUser(this.selectedUser.id, formData).subscribe({
       next: (response) => {
         console.log('User updated:', response);
         this.closeEditModal();
@@ -188,9 +157,7 @@ export class UserListComponent implements OnInit {
   deleteUser() {
     if (!this.selectedUser) return;
 
-    const url = `${this.apiService.apiUrl}/users/${this.selectedUser.id}`;
-    
-    this.http.delete(url, this.getAuthHeaders()).subscribe({
+    this.userService.deleteUser(this.selectedUser.id).subscribe({
       next: () => {
         console.log('User deleted');
         this.closeDeleteModal();
@@ -204,10 +171,7 @@ export class UserListComponent implements OnInit {
 
   // Toggle User Active Status
   toggleUserActive(user: User) {
-    const url = `${this.apiService.apiUrl}/users/${user.id}/active`;
-    const data = { is_active: !user.is_active };
-    
-    this.http.put(url, data, this.getAuthHeaders()).subscribe({
+    this.userService.setUserActive(user.id, !user.is_active).subscribe({
       next: () => {
         user.is_active = !user.is_active;
         console.log(`User ${user.is_active ? 'activated' : 'deactivated'}`);

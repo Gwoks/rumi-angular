@@ -1,0 +1,250 @@
+<div class="children-container min-h-full">
+  <!-- Header -->
+  <div class="header-section">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Children</h1>
+        <p class="text-gray-600 mt-1">Manage your children's information</p>
+      </div>
+      <button 
+        (click)="openCreateForm()"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Add Child
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Children List -->
+  <div *ngIf="!loading" class="bg-white rounded-lg shadow-sm border">
+    <!-- Empty State -->
+    <div *ngIf="children.length === 0" class="text-center py-12">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No children</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by adding your first child.</p>
+      <div class="mt-6">
+        <button 
+          (click)="openCreateForm()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+          Add Child
+        </button>
+      </div>
+    </div>
+
+    <!-- Children Table -->
+    <div *ngIf="children.length > 0" class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nickname</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Birth Date</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+            <th *ngIf="isAdmin" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let child of children" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">{{ child.name }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-500">{{ child.nick_name || '-' }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-500">{{ formatDate(child.birth_date) }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-500">{{ getAge(child.birth_date) }} years old</div>
+            </td>
+            <td *ngIf="isAdmin" class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-500">{{ child.user?.name || 'Unknown' }}</div>
+              <div class="text-xs text-gray-400">{{ child.user?.email || '' }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span 
+                class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                [class]="child.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                {{ child.is_active ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <div class="flex justify-end gap-2">
+                <button 
+                  (click)="openEditForm(child)"
+                  class="text-blue-600 hover:text-blue-900 p-1 rounded transition-colors"
+                  title="Edit">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                </button>
+                <button 
+                  *ngIf="isAdmin"
+                  (click)="toggleChildStatus(child)"
+                  class="p-1 rounded transition-colors"
+                  [class]="child.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'"
+                  [title]="child.is_active ? 'Deactivate' : 'Activate'">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path *ngIf="child.is_active" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636"></path>
+                    <path *ngIf="!child.is_active" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </button>
+                <button 
+                  (click)="deleteChild(child)"
+                  class="text-red-600 hover:text-red-900 p-1 rounded transition-colors"
+                  title="Delete">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="children.length > 0 && totalPages > 1" class="px-6 py-3 border-t border-gray-200">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-700">
+          Showing {{ getDisplayRange().start }} to {{ getDisplayRange().end }} of {{ totalChildren }} children
+        </div>
+        <div class="flex gap-1">
+          <button 
+            (click)="goToPage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+            class="px-3 py-1 text-sm border rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+            Previous
+          </button>
+          <button 
+            *ngFor="let page of getPaginationPages()"
+            (click)="goToPage(page)"
+            class="px-3 py-1 text-sm border rounded-md hover:bg-gray-50"
+            [class]="page === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'text-gray-700'">
+            {{ page }}
+          </button>
+          <button 
+            (click)="goToPage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+            class="px-3 py-1 text-sm border rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Modal -->
+  <div *ngIf="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+      <form [formGroup]="childForm" (ngSubmit)="onSubmit()">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">
+            {{ editingChild ? 'Edit Child' : 'Add New Child' }}
+          </h3>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="px-6 py-4 space-y-4">
+          
+          <!-- Debug Info (remove after testing) -->
+          <div *ngIf="true" class="bg-gray-100 p-2 text-xs rounded">
+            <p><strong>Debug Info:</strong></p>
+            <p>Form Valid: {{ childForm.valid }}</p>
+            <p>Form Errors: {{ getFormErrors() | json }}</p>
+            <button type="button" (click)="forceValidation()" class="mt-1 px-2 py-1 bg-blue-500 text-white text-xs rounded">Force Validation Check</button>
+            <button type="button" (click)="testForm()" class="mt-1 ml-2 px-2 py-1 bg-green-500 text-white text-xs rounded">Fill Test Data</button>
+          </div>
+          <!-- Name Field -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+              Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter child's name"
+              autocomplete="off">
+            <div *ngIf="childForm.get('name')?.invalid && childForm.get('name')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="childForm.get('name')?.errors?.['required']">Name is required</div>
+              <div *ngIf="childForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters</div>
+              <div *ngIf="childForm.get('name')?.errors?.['maxlength']">Name must be less than 100 characters</div>
+            </div>
+          </div>
+
+          <!-- Nickname Field -->
+          <div>
+            <label for="nick_name" class="block text-sm font-medium text-gray-700 mb-1">
+              Nickname
+            </label>
+            <input
+              type="text"
+              id="nick_name"
+              formControlName="nick_name"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter nickname (optional)"
+              autocomplete="off">
+            <div *ngIf="childForm.get('nick_name')?.invalid && childForm.get('nick_name')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="childForm.get('nick_name')?.errors?.['maxlength']">Nickname must be less than 50 characters</div>
+            </div>
+          </div>
+
+          <!-- Birth Date Field -->
+          <div>
+            <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-1">
+              Birth Date <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              id="birth_date"
+              formControlName="birth_date"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              [max]="getTodayDate()"
+              autocomplete="off">
+            <div *ngIf="childForm.get('birth_date')?.invalid && childForm.get('birth_date')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="childForm.get('birth_date')?.errors?.['required']">Birth date is required</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+          <!-- Debug: Show form status -->
+          <div class="text-xs text-gray-500 mr-auto">
+            Status: {{ childForm.valid ? 'VALID' : 'INVALID' }} | 
+            Disabled: {{ childForm.invalid ? 'YES' : 'NO' }}
+          </div>
+          <button
+            type="button"
+            (click)="closeForm()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            [disabled]="childForm.invalid"
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            [title]="childForm.invalid ? 'Please fill in all required fields correctly' : 'Click to ' + (editingChild ? 'update' : 'create') + ' child'">
+            {{ editingChild ? 'Update' : 'Create' }}
+            <span *ngIf="childForm.invalid" class="ml-1 text-xs">(Disabled)</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

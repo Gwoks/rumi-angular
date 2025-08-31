@@ -1,21 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterModule, Router } from '@angular/router';
+import { RouterOutlet, RouterModule, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthService, User } from '../../services/auth.service';
-import { WelcomeComponent } from './welcome/welcome.component';
-import { UserListComponent } from './user-list/user-list.component';
-import { ProfileEditComponent } from './profile-edit/profile-edit.component';
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    RouterModule,
-    WelcomeComponent,
-    UserListComponent,
-    ProfileEditComponent
+    imports: [
+    CommonModule, 
+    RouterOutlet, 
+    RouterModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
@@ -27,7 +23,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -48,6 +45,17 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/home']);
       }
     });
+
+    // Listen to route changes to update current view
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const childRoute = this.route.firstChild;
+        if (childRoute) {
+          const routePath = childRoute.snapshot.routeConfig?.path || '';
+          this.currentView = this.getViewFromRoute(routePath);
+        }
+      });
   }
 
   isAdmin(): boolean {
@@ -59,7 +67,24 @@ export class DashboardComponent implements OnInit {
   }
 
   setView(view: string) {
-    this.currentView = view;
+    // Navigate to the appropriate route instead of just setting the view
+    this.router.navigate(['/dashboard', this.getRouteForView(view)]);
+  }
+
+  private getRouteForView(view: string): string {
+    switch (view) {
+      case 'user-list': return 'users';
+      case 'profile-edit': return 'profile';
+      default: return view;
+    }
+  }
+
+  private getViewFromRoute(routePath: string): string {
+    switch (routePath) {
+      case 'users': return 'user-list';
+      case 'profile': return 'profile-edit';
+      default: return routePath;
+    }
   }
 
   logout() {

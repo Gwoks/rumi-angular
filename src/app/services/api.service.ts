@@ -18,9 +18,9 @@ export class ApiService {
   // Authentication endpoints
   get auth() {
     return {
-      login: `${this.apiUrl}/auth/login`,
-      signup: `${this.apiUrl}/auth/signup`,
-      logout: `${this.apiUrl}/auth/logout`,
+      login: `${this.baseUrl}/api/${this.apiVersion}/auth/login`,
+      signup: `${this.baseUrl}/api/${this.apiVersion}/auth/signup`,
+      logout: `${this.baseUrl}/api/${this.apiVersion}/auth/logout`,
     };
   }
 

@@ -1,0 +1,77 @@
+.children-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+.header-section {
+  @apply mb-8;
+}
+
+/* Custom styles for better mobile responsiveness */
+@media (max-width: 640px) {
+  .children-container {
+    @apply px-2 py-4;
+  }
+  
+  .header-section .flex {
+    @apply flex-col gap-4;
+  }
+  
+  .header-section h1 {
+    @apply text-2xl;
+  }
+}
+
+/* Table responsive styles */
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    @apply -mx-4;
+  }
+  
+  table {
+    @apply text-sm;
+  }
+  
+  th, td {
+    @apply px-3 py-2;
+  }
+}
+
+/* Form modal responsive styles */
+@media (max-width: 640px) {
+  .fixed .max-w-md {
+    @apply max-w-full mx-2;
+  }
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Button hover effects */
+.transition-colors {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+/* Status badge styles */
+.bg-green-100 {
+  background-color: #dcfce7;
+}
+
+.text-green-800 {
+  color: #166534;
+}
+
+.bg-red-100 {
+  background-color: #fee2e2;
+}
+
+.text-red-800 {
+  color: #991b1b;
+}

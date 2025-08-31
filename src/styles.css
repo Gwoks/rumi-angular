@@ -26,6 +26,10 @@
   .btn-secondary {
     @apply bg-sage-500 hover:bg-sage-600 text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg;
   }
+
+  .btn-tertiary {
+    @apply bg-cream-50 hover:bg-cream-100 text-sage-700 font-semibold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg;
+  }
   
   .card-organic {
     @apply bg-white rounded-3xl shadow-xl p-6 transform transition-all duration-300 hover:scale-105;

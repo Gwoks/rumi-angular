@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { User } from '../../../services/auth.service';
+import { Router } from '@angular/router';
+import { User, AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-welcome',
@@ -9,8 +10,21 @@ import { User } from '../../../services/auth.service';
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.css']
 })
-export class WelcomeComponent {
+export class WelcomeComponent implements OnInit {
   @Input() user: User | null = null;
+  @Output() navigateToView = new EventEmitter<string>();
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    // Get user from auth service if not provided as input
+    if (!this.user) {
+      this.user = this.authService.currentUserValue;
+    }
+  }
 
   getCurrentTime(): string {
     return new Date().toLocaleTimeString();
@@ -30,5 +44,19 @@ export class WelcomeComponent {
     if (hour < 12) return 'Good morning';
     if (hour < 17) return 'Good afternoon';
     return 'Good evening';
+  }
+
+  onQuickActionClick(action: string): void {
+    // Navigate directly using router instead of emitting event
+    const route = this.getRouteForView(action);
+    this.router.navigate(['/dashboard', route]);
+  }
+
+  private getRouteForView(view: string): string {
+    switch (view) {
+      case 'user-list': return 'users';
+      case 'profile-edit': return 'profile';
+      default: return view;
+    }
   }
 }

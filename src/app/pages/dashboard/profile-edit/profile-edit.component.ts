@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService, User } from '../../../services/auth.service';
-import { ApiService } from '../../../services/api.service';
+import { UserService } from '../../../services/user.service';
 
 interface ApiResponse {
   success: boolean;
@@ -38,9 +37,8 @@ export class ProfileEditComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private authService: AuthService,
-    private apiService: ApiService
+    private userService: UserService
   ) {
     this.profileForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -75,15 +73,7 @@ export class ProfileEditComponent implements OnInit {
     return null;
   }
 
-  getAuthHeaders() {
-    const token = this.authService.getToken();
-    return {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      })
-    };
-  }
+
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
@@ -104,9 +94,8 @@ export class ProfileEditComponent implements OnInit {
     this.clearMessages();
 
     const formData = this.profileForm.value;
-    const url = `${this.apiService.apiUrl}/profile`;
     
-    this.http.put<ApiResponse>(url, formData, this.getAuthHeaders()).subscribe({
+    this.userService.updateProfile(formData).subscribe({
       next: (response) => {
         this.profileLoading = false;
         if (response.success) {
@@ -119,7 +108,7 @@ export class ProfileEditComponent implements OnInit {
             this.authService.updateCurrentUser(response.data);
           }
         } else {
-          this.profileError = response.error?.message || 'Failed to update profile';
+          this.profileError = 'Failed to update profile';
         }
       },
       error: (error) => {
@@ -140,17 +129,12 @@ export class ProfileEditComponent implements OnInit {
       current_password: this.passwordForm.value.currentPassword,
       new_password: this.passwordForm.value.newPassword
     };
-    const url = `${this.apiService.apiUrl}/profile/password`;
     
-    this.http.put<ApiResponse>(url, formData, this.getAuthHeaders()).subscribe({
+    this.userService.changePassword(formData).subscribe({
       next: (response) => {
         this.passwordLoading = false;
-        if (response.success) {
-          this.passwordMessage = 'Password changed successfully!';
-          this.passwordForm.reset();
-        } else {
-          this.passwordError = response.error?.message || 'Failed to change password';
-        }
+        this.passwordMessage = 'Password changed successfully!';
+        this.passwordForm.reset();
       },
       error: (error) => {
         this.passwordLoading = false;

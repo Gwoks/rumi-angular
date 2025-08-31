@@ -1,0 +1,138 @@
+.activities-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+.header-section {
+  @apply mb-8;
+}
+
+/* Custom styles for better mobile responsiveness */
+@media (max-width: 640px) {
+  .activities-container {
+    @apply px-2 py-4;
+  }
+  
+  .header-section .flex {
+    @apply flex-col gap-4;
+  }
+  
+  .header-section h1 {
+    @apply text-2xl;
+  }
+}
+
+/* Activity timeline styles */
+.activity-item {
+  @apply relative;
+}
+
+.activity-item:not(:last-child)::after {
+  content: '';
+  @apply absolute left-5 top-16 w-px h-full bg-gray-200;
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Button hover effects */
+.transition-colors {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+/* Status badge styles */
+.bg-green-100 {
+  background-color: #dcfce7;
+}
+
+.text-green-600 {
+  color: #16a34a;
+}
+
+.bg-blue-100 {
+  background-color: #dbeafe;
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.bg-yellow-100 {
+  background-color: #fef3c7;
+}
+
+.text-yellow-600 {
+  color: #d97706;
+}
+
+.bg-purple-100 {
+  background-color: #f3e8ff;
+}
+
+.text-purple-600 {
+  color: #9333ea;
+}
+
+.bg-orange-100 {
+  background-color: #fed7aa;
+}
+
+.text-orange-600 {
+  color: #ea580c;
+}
+
+.bg-red-100 {
+  background-color: #fee2e2;
+}
+
+.text-red-600 {
+  color: #dc2626;
+}
+
+.bg-indigo-100 {
+  background-color: #e0e7ff;
+}
+
+.text-indigo-600 {
+  color: #4f46e5;
+}
+
+.bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+/* Details/Summary styling */
+details summary {
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .activities-container .flex {
+    @apply flex-col space-y-4;
+  }
+  
+  .activity-item .flex {
+    @apply flex-col space-y-2;
+  }
+  
+  .activity-item .text-right {
+    @apply text-left;
+  }
+}
+

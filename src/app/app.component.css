@@ -1,0 +1,17 @@
+/* Ensure proper sticky footer layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure content takes full height when needed */
+router-outlet + * {
+  height: 100%;
+}
