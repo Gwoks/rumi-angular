@@ -34,9 +34,28 @@ export const routes: Routes = [
     path: 'auth', 
     loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent)
   },
-  { 
-    path: 'dashboard', 
-    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
+    {
+    path: 'dashboard',
+    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    children: [
+      { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+      {
+        path: 'welcome',
+        loadComponent: () => import('./pages/dashboard/welcome/welcome.component').then(m => m.WelcomeComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/dashboard/profile-edit/profile-edit.component').then(m => m.ProfileEditComponent)
+      },
+      {
+        path: 'users',
+        loadComponent: () => import('./pages/dashboard/user-list/user-list.component').then(m => m.UserListComponent)
+      },
+      {
+        path: 'activities',
+        loadComponent: () => import('./pages/dashboard/activity-view/activity-view.component').then(m => m.ActivityViewComponent)
+      }
+    ]
   },
   { path: '**', redirectTo: '/home' }
 ];
