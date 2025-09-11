@@ -83,6 +83,7 @@ export class DashboardComponent implements OnInit {
     switch (routePath) {
       case 'users': return 'user-list';
       case 'profile': return 'profile-edit';
+      case 'design-template': return 'design-template';
       default: return routePath;
     }
   }

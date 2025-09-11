@@ -18,10 +18,6 @@ export class ChildrenComponent implements OnInit {
   showForm = false;
   editingChild: Child | null = null;
   childForm: FormGroup;
-  currentPage = 1;
-  totalPages = 1;
-  totalChildren = 0;
-  limit = 10;
   isAdmin = false;
 
   constructor(
@@ -31,71 +27,34 @@ export class ChildrenComponent implements OnInit {
     private router: Router
   ) {
     this.childForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      nick_name: ['', [Validators.maxLength(50)]],
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      nick_name: [''],
       birth_date: ['', [Validators.required]]
     });
   }
 
   ngOnInit(): void {
-    this.checkUserRole();
-    this.checkAuthStatus();
+    this.isAdmin = this.authService.currentUserValue?.role === 'admin';
     this.loadChildren();
   }
 
-  checkAuthStatus(): void {
-    const user = this.authService.currentUserValue;
-    const token = this.authService.getToken();
-    const isValid = this.authService.isTokenValid();
-    
-    if (!user || !token || !isValid) {
-      if (!isValid) {
-        this.authService.clearInvalidSession();
-      }
-      // Redirect to login if not authenticated
-      alert('Your session has expired. Please log in again.');
-      this.router.navigate(['/login']);
-      return;
-    }
-  }
-
-  checkUserRole(): void {
-    const user = this.authService.currentUserValue;
-    this.isAdmin = user?.role === 'admin';
-  }
-
   loadChildren(): void {
-    // Check authentication before loading
-    if (!this.authService.isTokenValid()) {
-      this.authService.clearInvalidSession();
-      this.router.navigate(['/login']);
-      return;
-    }
-    
     this.loading = true;
     
     const loadMethod = this.isAdmin ? 
-      this.childrenService.getAllChildren(this.currentPage, this.limit) :
-      this.childrenService.getChildren(this.currentPage, this.limit);
+      this.childrenService.getAllChildren(1, 50) :
+      this.childrenService.getChildren(1, 50);
 
     loadMethod.subscribe({
       next: (response) => {
-        if (response.success) {
-          this.children = response.data;
-          if (response.pagination) {
-            this.totalPages = response.pagination.total_pages;
-            this.totalChildren = response.pagination.total;
-          }
-        }
+        this.children = response.success ? response.data : [];
         this.loading = false;
       },
       error: (error) => {
         console.error('Error loading children:', error);
+        this.children = [];
         this.loading = false;
-        
         if (error.status === 401) {
-          alert('Your session has expired. Please log in again.');
-          this.authService.clearInvalidSession();
           this.router.navigate(['/login']);
         }
       }
@@ -113,7 +72,7 @@ export class ChildrenComponent implements OnInit {
     this.childForm.patchValue({
       name: child.name,
       nick_name: child.nick_name,
-      birth_date: this.childrenService.formatDateForInput(child.birth_date)
+      birth_date: this.formatDateForInput(child.birth_date)
     });
     this.showForm = true;
   }
@@ -125,91 +84,72 @@ export class ChildrenComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // Check authentication before submitting
-    if (!this.authService.isTokenValid()) {
-      alert('Your session has expired. Please log in again.');
-      this.router.navigate(['/login']);
+    if (!this.childForm.valid) {
+      alert('Please fill in all required fields correctly');
       return;
     }
+
+    const formData = this.childForm.value;
     
-    if (this.childForm.valid) {
-      const formData = this.childForm.value;
-      
-      if (this.editingChild) {
-        // Update existing child
-        const updateData: UpdateChildRequest = {
-          name: formData.name,
-          nick_name: formData.nick_name || '',
-          birth_date: formData.birth_date
-        };
+    if (this.editingChild) {
+      // Update child
+      const updateData: UpdateChildRequest = {
+        name: formData.name.trim(),
+        nick_name: formData.nick_name?.trim() || '',
+        birth_date: formData.birth_date
+      };
 
-        this.childrenService.updateChild(this.editingChild.id, updateData).subscribe({
-          next: (response) => {
-            if (response.success) {
-              this.loadChildren();
-              this.closeForm();
-            }
-          },
-          error: (error) => {
-            console.error('Error updating child:', error);
+      this.childrenService.updateChild(this.editingChild.id, updateData).subscribe({
+        next: (response) => {
+          if (response.success) {
+            alert('Child updated successfully!');
+            this.loadChildren();
+            this.closeForm();
+          } else {
+            alert('Error: ' + response.message);
           }
-        });
-      } else {
-        // Create new child
-        const createData: CreateChildRequest = {
-          name: formData.name,
-          nick_name: formData.nick_name || '',
-          birth_date: formData.birth_date
-        };
-        
-
-
-        this.childrenService.createChild(createData).subscribe({
-          next: (response) => {
-            if (response.success) {
-              this.loadChildren();
-              this.closeForm();
-              alert('Child added successfully!');
-            } else {
-              alert(`Error: ${response.message || 'Failed to create child'}`);
-            }
-          },
-          error: (error) => {
-            console.error('Error creating child:', error);
-            let errorMessage = 'Failed to create child';
-            
-            if (error.status === 401) {
-              errorMessage = 'You need to log in again to perform this action';
-              // Redirect to login for 401 errors
-              setTimeout(() => {
-                this.authService.clearInvalidSession();
-                this.router.navigate(['/login']);
-              }, 2000);
-            } else if (error.status === 403) {
-              errorMessage = 'You do not have permission to create children';
-            } else if (error.error?.message) {
-              errorMessage = error.error.message;
-            } else if (error.message) {
-              errorMessage = error.message;
-            }
-            
-            alert(`Error: ${errorMessage}`);
-          }
-        });
-      }
+        },
+        error: (error) => {
+          console.error('Error updating child:', error);
+          alert('Failed to update child');
+        }
+      });
     } else {
-      alert('Please fill in all required fields correctly');
+      // Create child
+      const createData: CreateChildRequest = {
+        name: formData.name.trim(),
+        nick_name: formData.nick_name?.trim() || '',
+        birth_date: formData.birth_date
+      };
+
+      this.childrenService.createChild(createData).subscribe({
+        next: (response) => {
+          if (response.success) {
+            alert('Child added successfully!');
+            this.loadChildren();
+            this.closeForm();
+          } else {
+            alert('Error: ' + response.message);
+          }
+        },
+        error: (error) => {
+          console.error('Error creating child:', error);
+          alert('Failed to create child');
+        }
+      });
     }
   }
 
   deleteChild(child: Child): void {
-    if (confirm(`Are you sure you want to delete ${child.name}?`)) {
+    if (confirm(`Delete ${child.name}?`)) {
       this.childrenService.deleteChild(child.id).subscribe({
-        next: (response) => {
+        next: () => {
+          alert('Child deleted successfully!');
           this.loadChildren();
         },
         error: (error) => {
           console.error('Error deleting child:', error);
+          alert('Failed to delete child');
         }
       });
     }
@@ -219,82 +159,36 @@ export class ChildrenComponent implements OnInit {
     if (!this.isAdmin) return;
     
     this.childrenService.setChildActive(child.id, !child.is_active).subscribe({
-      next: (response) => {
-        this.loadChildren();
-      },
+      next: () => this.loadChildren(),
       error: (error) => {
         console.error('Error updating child status:', error);
+        alert('Failed to update child status');
       }
     });
-  }
-
-  getAge(birthDate: string): number {
-    return this.childrenService.calculateAge(birthDate);
   }
 
   formatDate(dateString: string): string {
-    return this.childrenService.formatDate(dateString);
+    return new Date(dateString).toLocaleDateString();
   }
 
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.loadChildren();
-    }
+  formatDateForInput(dateString: string): string {
+    return new Date(dateString).toISOString().split('T')[0];
   }
 
-  getPaginationPages(): number[] {
-    const pages: number[] = [];
-    const startPage = Math.max(1, this.currentPage - 2);
-    const endPage = Math.min(this.totalPages, this.currentPage + 2);
+  calculateAge(birthDate: string): number {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
     
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
     }
     
-    return pages;
-  }
-
-  getDisplayRange(): { start: number; end: number } {
-    const start = (this.currentPage - 1) * this.limit + 1;
-    const end = Math.min(this.currentPage * this.limit, this.totalChildren);
-    return { start, end };
-  }
-
-  getFormErrors(): any {
-    const errors: any = {};
-    Object.keys(this.childForm.controls).forEach(key => {
-      const controlErrors = this.childForm.get(key)?.errors;
-      if (controlErrors) {
-        errors[key] = controlErrors;
-      }
-    });
-    return errors;
+    return age;
   }
 
   getTodayDate(): string {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  }
-
-  // Debug method to force form validation
-  forceValidation(): void {
-    Object.keys(this.childForm.controls).forEach(key => {
-      this.childForm.get(key)?.markAsTouched();
-      this.childForm.get(key)?.updateValueAndValidity();
-    });
-    console.log('Form validation forced:', this.childForm.valid);
-    console.log('Form errors:', this.getFormErrors());
-  }
-
-  // Test method to fill form with valid data
-  testForm(): void {
-    this.childForm.patchValue({
-      name: 'Test Child',
-      nick_name: 'Testy',
-      birth_date: '2020-01-15'
-    });
-    this.forceValidation();
-    console.log('Test data filled. Form should now be valid:', this.childForm.valid);
+    return new Date().toISOString().split('T')[0];
   }
 }

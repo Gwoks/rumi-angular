@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService, User } from '../../../services/auth.service';
@@ -19,7 +19,7 @@ interface ApiResponse {
   styleUrls: ['./profile-edit.component.css']
 })
 export class ProfileEditComponent implements OnInit {
-  @Input() user: User | null = null;
+  user: User | null = null;
 
   profileForm: FormGroup;
   passwordForm: FormGroup;
@@ -53,10 +53,44 @@ export class ProfileEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadUserProfile();
+  }
+
+  loadUserProfile() {
+    this.loading = true;
+    
+    // First try to get user from auth service
+    this.user = this.authService.currentUserValue;
+    
+    if (this.user) {
+      this.populateForm();
+      this.loading = false;
+    } else {
+      // If no user in auth service, fetch from API
+      this.authService.getProfile().subscribe({
+        next: (response) => {
+          this.loading = false;
+          if (response.success) {
+            this.user = response.data;
+            this.populateForm();
+          } else {
+            this.profileError = 'Failed to load profile data';
+          }
+        },
+        error: (error) => {
+          this.loading = false;
+          console.error('Error loading profile:', error);
+          this.profileError = 'Failed to load profile data';
+        }
+      });
+    }
+  }
+
+  private populateForm() {
     if (this.user) {
       this.profileForm.patchValue({
-        name: this.user.name,
-        phone: this.user.phone
+        name: this.user.name || '',
+        phone: this.user.phone || ''
       });
     }
   }

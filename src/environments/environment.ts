@@ -1,7 +1,7 @@
 // Environment configuration using .env file
 export const environment = {
   production: false,
-  apiUrl: (process.env as any)['NG_APP_API_URL'] || '', // Use relative URLs for proxy
+  apiUrl: (process.env as any)['NG_APP_API_URL'] || 'http://localhost:8080',
   apiVersion: (process.env as any)['NG_APP_API_VERSION'] || 'v1',
   appName: (process.env as any)['NG_APP_NAME'] || 'RUMI',
   appVersion: (process.env as any)['NG_APP_VERSION'] || '1.0.0',

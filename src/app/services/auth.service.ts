@@ -120,6 +120,22 @@ export class AuthService {
     this.currentUserSubject.next(user);
   }
 
+  getProfile(): Observable<{success: boolean, data: User, message: string}> {
+    const token = this.getToken();
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+    
+    return this.http.get<{success: boolean, data: User, message: string}>(this.apiService.auth.profile, { headers })
+      .pipe(
+        tap(response => {
+          if (response.success && response.data) {
+            this.updateCurrentUser(response.data);
+          }
+        })
+      );
+  }
+
   // Check if token is valid
   isTokenValid(): boolean {
     const token = this.getToken();

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService, User } from './auth.service';
+import { environment } from '../../environments/environment';
 
 export interface CreateUserRequest {
   name: string;
@@ -40,7 +41,7 @@ export interface UserResponse {
   providedIn: 'root'
 })
 export class UserService {
-  private readonly baseUrl = '/api/v1';
+  private readonly baseUrl = `${environment.apiUrl}/api/${environment.apiVersion}`;
 
   constructor(
     private http: HttpClient,

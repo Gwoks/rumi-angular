@@ -21,6 +21,7 @@ export class ApiService {
       login: `${this.baseUrl}/api/${this.apiVersion}/auth/login`,
       signup: `${this.baseUrl}/api/${this.apiVersion}/auth/signup`,
       logout: `${this.baseUrl}/api/${this.apiVersion}/auth/logout`,
+      profile: `${this.baseUrl}/api/${this.apiVersion}/auth/profile`,
     };
   }
 

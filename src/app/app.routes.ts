@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { AuthService } from './services/auth.service';
+import { Router } from '@angular/router';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -58,6 +61,21 @@ export const routes: Routes = [
       { 
         path: 'activities', 
         loadComponent: () => import('./pages/dashboard/activities/activities.component').then(m => m.ActivitiesComponent)
+      },
+      { 
+        path: 'design-template', 
+        loadComponent: () => import('./pages/dashboard/design-template/design-template.component').then(m => m.DesignTemplateComponent),
+        canActivate: [() => {
+          const authService = inject(AuthService);
+          const router = inject(Router);
+          const user = authService.currentUserValue;
+          if (user?.role === 'admin') {
+            return true;
+          } else {
+            router.navigate(['/dashboard']);
+            return false;
+          }
+        }]
       }
     ]
   },

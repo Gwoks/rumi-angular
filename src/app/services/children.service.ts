@@ -3,6 +3,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 export interface Child {
   id: number;
@@ -60,7 +61,7 @@ export interface ChildResponse {
   providedIn: 'root'
 })
 export class ChildrenService {
-  private readonly baseUrl = '/api/v1';
+  private readonly baseUrl = `${environment.apiUrl}/api/${environment.apiVersion}`;
 
   constructor(
     private http: HttpClient,
